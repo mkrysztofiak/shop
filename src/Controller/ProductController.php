@@ -16,9 +16,10 @@ class ProductController extends AbstractController
      * @param ProductRepository $repository
      * @param Request $request
      * @param PaginatorInterface $paginator
+     * @param int $page
      * @return Response
      */
-    public function index(ProductRepository $repository, Request $request, PaginatorInterface $paginator, int $page) : Response
+    public function index(ProductRepository $repository, PaginatorInterface $paginator, int $page) : Response
     {
         $queryBuilder = $repository->getProductListQueryBuilder();
 
