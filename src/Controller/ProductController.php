@@ -25,7 +25,12 @@ class ProductController extends AbstractController
 
         $pagination = $paginator->paginate(
             $queryBuilder,
-            $page
+            $page,
+            10,
+            [
+                'defaultSortFieldName' => 'p.createdAt',
+                'defaultSortDirection' => 'desc'
+            ]
         );
 
         return $this->render(
