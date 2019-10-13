@@ -4,9 +4,12 @@ namespace App\Controller\Admin;
 
 use App\Controller\ProductController;
 use App\Entity\Product;
+use App\Event\ProductAddedEvent;
 use App\Form\ProductType;
 use App\Provider\LocaleCurrencyProvider;
 use App\Repository\ProductRepository;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\LegacyEventDispatcherProxy;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +18,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AdminProductController extends ProductController
 {
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    public function __construct(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = LegacyEventDispatcherProxy::decorate($eventDispatcher);
+    }
+
     /**
      * @Route("/admin/new-product", name="admin_new_product")
      * @param Request $request
@@ -48,6 +61,7 @@ class AdminProductController extends ProductController
         $repository->saveProduct($product);
 
         $this->addFlash('success', 'Product added');
+        $this->eventDispatcher->dispatch(new ProductAddedEvent($product));
 
         return $this->redirectToRoute('products');
     }

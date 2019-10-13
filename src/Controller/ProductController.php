@@ -14,7 +14,6 @@ class ProductController extends AbstractController
     /**
      * @Route("/products/{page?1}", name="products", requirements={"page"="^[1-9]\d*"})
      * @param ProductRepository $repository
-     * @param Request $request
      * @param PaginatorInterface $paginator
      * @param int $page
      * @return Response
